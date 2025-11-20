@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Pipeline with Docker
 
 on:
   push:
@@ -19,14 +19,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: Cache Node modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Install Dependencies
         run: npm install
 
@@ -35,3 +27,9 @@ jobs:
 
       - name: Run Tests
         run: npm test
+
+      # -----------------------
+      # STEP 4: Build Docker Image
+      # -----------------------
+      - name: Build Docker Image
+        run: docker build -t my_devops_app .
