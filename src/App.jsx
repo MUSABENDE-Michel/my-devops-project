@@ -1,42 +1,50 @@
 import { useState } from "react";
+import { CartProvider, useCart } from "./context/CartContext.jsx";
+import ProductList from "./components/ProductList.jsx";
+import CartDrawer from "./components/CartDrawer.jsx";
+import AdminPanel from "./components/AdminPanel.jsx";
 
-const products = [
-  { id: 1, name: "Laptop", price: 1200 },
-  { id: 2, name: "Headphones", price: 150 },
-  { id: 3, name: "Smartphone", price: 800 },
-];
+function Header({ onOpen, onOpenAdmin }) {
+  const { totalCount } = useCart();
 
-export default function App() {
-  const [cart, setCart] = useState([]);
+  return (
+    <header className="flex items-center justify-between py-4">
+      <h1 className="text-2xl font-bold">🛍 Online Shop</h1>
+      <div className="flex items-center gap-2">
+        <button onClick={onOpenAdmin} className="text-sm px-3 py-1 bg-gray-100 rounded">Admin</button>
+        <button
+          onClick={onOpen}
+          className="relative inline-flex items-center gap-2 bg-blue-600 text-white px-3 py-2 rounded"
+        >
+          🛒 Cart
+          <span className="ml-1 bg-white text-blue-600 rounded-full px-2 text-sm font-semibold">
+            {totalCount}
+          </span>
+        </button>
+      </div>
+    </header>
+  );
+}
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
+function Shop() {
+  const [open, setOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">🛍 Online Shop</h1>
-      <div className="grid grid-cols-3 gap-4">
-        {products.map((p) => (
-          <div key={p.id} className="border p-4 rounded shadow">
-            <h2 className="text-lg font-semibold">{p.name}</h2>
-            <p>${p.price}</p>
-            <button
-              onClick={() => addToCart(p)}
-              className="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
-            >
-              Add to Cart
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <h2 className="text-xl font-bold mt-6">🛒 Cart</h2>
-      <ul>
-        {cart.map((item, index) => (
-          <li key={index}>{item.name} - ${item.price}</li>
-        ))}
-      </ul>
+      <Header onOpen={() => setOpen(true)} onOpenAdmin={() => setAdminOpen(true)} />
+      <ProductList />
+      <CartDrawer open={open} onClose={() => setOpen(false)} />
+      <AdminPanel open={adminOpen} onClose={() => setAdminOpen(false)} onUpdated={() => setRefreshKey((k) => k + 1)} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <Shop />
+    </CartProvider>
   );
 }

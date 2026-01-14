@@ -1,3 +1,30 @@
+# My DevOps App — Online Shop (React + Tailwind)
+
+This is a small demo online shop built with Vite, React and Tailwind CSS.
+
+Features
+- Product grid with images and details modal
+- Cart with quantity controls and localStorage persistence
+- Checkout form with basic validation (demo)
+
+Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Build for production
+
+```bash
+npm run build
+npm run preview
+```
+
+Next steps
+- Add real backend API for products and order submission
+- Add authentication and user orders
+- Add E2E tests and more unit tests
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
